@@ -4,17 +4,25 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>Tumblr Feed.xcscheme</key>
+		<key>AFNetworking.xcscheme</key>
 		<dict>
 			<key>isShown</key>
-			<true/>
-			<key>orderHint</key>
-			<integer>0</integer>
+			<false/>
+		</dict>
+		<key>Pods-Tumblr Feed.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
 		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>469A40081E43F49500C2362C</key>
+		<key>061969F0E67A3587D497E6841C6EAB25</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>1C3436CEA5C3D39764C5F54374794ECB</key>
 		<dict>
 			<key>primary</key>
 			<true/>
