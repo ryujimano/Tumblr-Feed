@@ -15,20 +15,17 @@ class PhotoTableViewCell: UITableViewCell {
     @IBOutlet weak var photoView: UIImageView!
     @IBOutlet weak var commentLabel: UILabel!
     
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         
+        //set profile image to a circular view
         profileImage.layer.cornerRadius = profileImage.frame.size.width / 2
         profileImage.clipsToBounds = true
         
+        //add border around profile image
         profileImage.layer.borderColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1).cgColor
         profileImage.layer.borderWidth = 2
-    }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
     }
 
 }
