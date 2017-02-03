@@ -6,6 +6,6 @@ Simple iOS table app that retrieves the tumblr feed from the user humansofnewyor
 
 Here's a walkthrough of the app:
 
-#[Screenshot](http://i.imgur.com/WOgil5f.gif)
+![YAP](http://i.imgur.com/WOgil5f.gif)
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
