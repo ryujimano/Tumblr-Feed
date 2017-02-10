@@ -77,18 +77,82 @@
                                 <rect key="frame" x="0.0" y="64" width="375" height="308"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="0.64430598139999995" green="0.72893673309999996" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <gestureRecognizers/>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="qw3-oy-853" appends="YES" id="NKJ-NK-Agd"/>
+                                </connections>
                             </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" id="Wt3-dA-rsg">
+                                <rect key="frame" x="16" y="380" width="100" height="100"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="yW8-Eu-dDR">
+                                <rect key="frame" x="131" y="380" width="228" height="100"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="20"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" id="wpb-x7-YAo"/>
                     <connections>
                         <outlet property="photoView" destination="KhV-qP-FKm" id="PAY-qc-toj"/>
+                        <outlet property="profileImage" destination="Wt3-dA-rsg" id="Epf-zP-xne"/>
+                        <outlet property="userLabel" destination="yW8-Eu-dDR" id="lao-wC-j0X"/>
+                        <segue destination="22e-NC-9Fe" kind="modal" identifier="photoViewSegue" id="SKc-Fs-fa9"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Wud-d4-06P" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="qw3-oy-853">
+                    <connections>
+                        <action selector="onTap:" destination="Un7-L4-nJa" id="WPk-TO-Yr8"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="1122.5" y="154.5"/>
+        </scene>
+        <!--Full Screen Photo View Controller-->
+        <scene sceneID="Oqp-Jq-h2m">
+            <objects>
+                <viewController id="22e-NC-9Fe" customClass="FullScreenPhotoViewController" customModule="Tumblr_Feed" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="S72-vZ-gRO">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" id="Lo0-4F-UsK">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" id="OLl-C2-vVn">
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                    </imageView>
+                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="8sg-5G-nyp">
+                                        <rect key="frame" x="325" y="31" width="39" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <state key="normal" title="Close">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="onButtonPress:" destination="22e-NC-9Fe" eventType="touchUpInside" id="a0P-hY-mrV"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                            </scrollView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <connections>
+                        <outlet property="photoView" destination="OLl-C2-vVn" id="9fs-Fu-w2k"/>
+                        <outlet property="scrollView" destination="Lo0-4F-UsK" id="8Ig-Fo-ht3"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="gV6-8y-NWl" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1589.5" y="154.5"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="k1P-kn-Q6h">
