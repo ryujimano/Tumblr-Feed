@@ -17,6 +17,12 @@ class PhotosViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     var posts: [NSDictionary] = []
     
+    var isMoreDataLoading = false
+    
+    var page = 0
+    
+    var loadingView:InfiniteScrollActivityView?
+    
     
     // MARK: - View Configuration
     override func viewDidLoad() {
@@ -26,7 +32,61 @@ class PhotosViewController: UIViewController, UITableViewDelegate, UITableViewDa
         tableView.delegate = self
         tableView.dataSource = self
         tableView.rowHeight = 300
+        
+        getData()
+        
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(PhotosViewController.refresh), for: .valueChanged)
+        tableView.insertSubview(refreshControl, at: 0)
+        
+        let frame = CGRect(x: 0, y: tableView.contentSize.height, width: tableView.bounds.size.width, height: InfiniteScrollActivityView.defaultHeight)
+        loadingView = InfiniteScrollActivityView(frame: frame)
+        loadingView!.isHidden = true
+        tableView.addSubview(loadingView!)
+        
+        var insets = tableView.contentInset;
+        insets.bottom += InfiniteScrollActivityView.defaultHeight;
+        tableView.contentInset = insets
+    }
+
     
+    func getData() {
+        //make a network request to Tumblr's API
+        let url = URL(string:"https://api.tumblr.com/v2/blog/humansofnewyork.tumblr.com/posts/photo?api_key=Q6vHoaVm5L1u2ZAW1fqv3Jw48gFzYVg9P0vH0VHl3GVy6quoGV&offset=\(page)")
+        let request = URLRequest(url: url!)
+        let session = URLSession(
+            configuration: URLSessionConfiguration.default,
+            delegate:nil,
+            delegateQueue:OperationQueue.main
+        )
+        
+        let task : URLSessionDataTask = session.dataTask(
+            with: request as URLRequest,
+            completionHandler: { (data, response, error) in
+                if let data = data {
+                    if let responseDictionary = try! JSONSerialization.jsonObject(
+                        with: data, options:[]) as? NSDictionary {
+                        
+                        self.isMoreDataLoading = false
+                        
+                        //retrieve the "response" dictionary from JSON
+                        let responseFieldDictionary = responseDictionary["response"] as! NSDictionary
+                        
+                        //retrieve the "posts" dictionary from "response"
+                        self.posts.append(contentsOf: responseFieldDictionary["posts"] as! [NSDictionary])
+                        
+                        self.loadingView?.stopAnimating()
+                        
+                        //reload data in tableview
+                        self.tableView.reloadData()
+                    }
+                }
+        });
+        task.resume()
+
+    }
+    
+    func refresh(_ refreshControl: UIRefreshControl) {
         
         //make a network request to Tumblr's API
         let url = URL(string:"https://api.tumblr.com/v2/blog/humansofnewyork.tumblr.com/posts/photo?api_key=Q6vHoaVm5L1u2ZAW1fqv3Jw48gFzYVg9P0vH0VHl3GVy6quoGV")
@@ -54,11 +114,11 @@ class PhotosViewController: UIViewController, UITableViewDelegate, UITableViewDa
                         self.tableView.reloadData()
                     }
                 }
+                refreshControl.endRefreshing()
         });
         task.resume()
-    }
 
-    
+    }
     
     
     // MARK: - TableView
@@ -111,12 +171,51 @@ class PhotosViewController: UIViewController, UITableViewDelegate, UITableViewDa
         }
     }
     
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         //if the selected cell is at its original height, update the tableview to reveal the comment
+        /*
         if tableView.cellForRow(at: indexPath)?.frame.height == 300 {
             selectedRow = indexPath.row
             tableView.beginUpdates()
             tableView.endUpdates()
+        }
+        */
+        
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
+ 
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let destination = segue.destination as! PhotoDetailsViewController
+        let indexPath = tableView.indexPath(for: sender as! PhotoTableViewCell)
+        
+        let post = posts[(indexPath?.row)!]
+        
+        if let photos = post.value(forKeyPath: "photos") as? [NSDictionary] {
+            let imageURLPath = photos[0].value(forKeyPath: "original_size.url") as! String
+                destination.photoURL = imageURLPath
+        }
+        
+        destination.post = posts[(indexPath?.row)!]
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if (!isMoreDataLoading) {
+            let scrollHeight = scrollView.contentSize.height
+            let scrollOffset = scrollHeight - tableView.bounds.size.height
+            
+            if scrollView.contentOffset.y > scrollOffset && scrollView.isDragging {
+                isMoreDataLoading = true
+                page = posts.count
+                
+                
+                let frame = CGRect(x: 0, y: tableView.contentSize.height, width: tableView.bounds.size.width, height: InfiniteScrollActivityView.defaultHeight)
+                loadingView?.frame = frame
+                loadingView!.startAnimating()
+                
+                getData()
+            }
         }
     }
 }
