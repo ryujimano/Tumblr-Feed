@@ -18,7 +18,7 @@ class PhotoTableViewCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        
+        /*
         //set profile image to a circular view
         profileImage.layer.cornerRadius = profileImage.frame.size.width / 2
         profileImage.clipsToBounds = true
@@ -26,6 +26,7 @@ class PhotoTableViewCell: UITableViewCell {
         //add border around profile image
         profileImage.layer.borderColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1).cgColor
         profileImage.layer.borderWidth = 2
+ */
     }
 
 }

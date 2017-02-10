@@ -63,6 +63,12 @@ class PhotosViewController: UIViewController, UITableViewDelegate, UITableViewDa
         let task : URLSessionDataTask = session.dataTask(
             with: request as URLRequest,
             completionHandler: { (data, response, error) in
+                
+                if error != nil {
+                    self.loadingView?.stopAnimating()
+                    return
+                }
+                
                 if let data = data {
                     if let responseDictionary = try! JSONSerialization.jsonObject(
                         with: data, options:[]) as? NSDictionary {
@@ -123,20 +129,20 @@ class PhotosViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     // MARK: - TableView
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return posts.count 
+        return 1 //posts.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "photoCell", for: indexPath) as! PhotoTableViewCell
         
-        let post = posts[indexPath.row]
-        
+        let post = posts[indexPath.section]
+        /*
         //retrieve username and profile image to put in the cell
         if let user = post["blog_name"] as? String {
             cell.userLabel.text = user
             cell.profileImage.setImageWith(URL(string: "https://api.tumblr.com/v2/blog/\(user)/avatar")!)
         }
-        
+        */
         //retrieve the comment of the corresponding image to put in the cell
         if let comment = post.value(forKey: "reblog") as? NSDictionary {
             if let comment = comment.value(forKey: "comment") as? String  {
@@ -163,12 +169,14 @@ class PhotosViewController: UIViewController, UITableViewDelegate, UITableViewDa
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         //if a cell is selected, change the height of the cell to 500 (to reveal the comment)
         //otherwise, keep it at 300
+        /*
         if selectedRow == indexPath.row {
             return 500
         }
         else {
-            return 300
-        }
+            return 223
+        }*/
+        return 223
     }
     
     
@@ -184,20 +192,62 @@ class PhotosViewController: UIViewController, UITableViewDelegate, UITableViewDa
         
         tableView.deselectRow(at: indexPath, animated: true)
     }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return posts.count
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let header = UIView(frame: CGRect(x: 0, y: 0, width: self.tableView.frame.width, height: 50))
+        header.backgroundColor = UIColor(colorLiteralRed: 1, green: 1, blue: 1, alpha: 0.75)
+        
+        let post = posts[section]
+            //retrieve username and profile image to put in the cell
+        let profileImage = UIImageView(frame: CGRect(x: 10, y: 10, width: 80, height: 80))
+        
+        var userName: String?
+        
+        if let user = post["blog_name"] as? String {
+            userName = user
+            profileImage.setImageWith(URL(string: "https://api.tumblr.com/v2/blog/\(user)/avatar")!)
+        }
+        
+        //set profile image to a circular view
+        profileImage.layer.cornerRadius = profileImage.frame.size.width / 2
+        profileImage.clipsToBounds = true
+        
+        //add border around profile image
+        profileImage.layer.borderColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1).cgColor
+        profileImage.layer.borderWidth = 2
+
+        header.addSubview(profileImage)
+        
+        let userLabel = UILabel(frame: CGRect(x: 100, y: 10, width: 250, height: 40))
+        userLabel.font = UIFont(name: "Avenir-Heavy", size: 20)
+        userLabel.text = userName
+        
+        header.addSubview(userLabel)
+        
+        return header
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 100
+    }
  
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let destination = segue.destination as! PhotoDetailsViewController
         let indexPath = tableView.indexPath(for: sender as! PhotoTableViewCell)
         
-        let post = posts[(indexPath?.row)!]
+        let post = posts[(indexPath?.section)!]
         
         if let photos = post.value(forKeyPath: "photos") as? [NSDictionary] {
             let imageURLPath = photos[0].value(forKeyPath: "original_size.url") as! String
                 destination.photoURL = imageURLPath
         }
         
-        destination.post = posts[(indexPath?.row)!]
+        destination.post = posts[(indexPath?.section)!]
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
