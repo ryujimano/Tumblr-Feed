@@ -144,16 +144,16 @@ class PhotosViewController: UIViewController, UITableViewDelegate, UITableViewDa
         }
         */
         //retrieve the comment of the corresponding image to put in the cell
-        if let comment = post.value(forKey: "reblog") as? NSDictionary {
-            if let comment = comment.value(forKey: "comment") as? String  {
-                
-                //use regex to strip HTML tags
-                let com = comment.replacingOccurrences(of: "<[^>]+>", with: "", options: .regularExpression, range: nil)
-                
-                cell.commentLabel.text = com
-                
-            }
-        }
+//        if let comment = post.value(forKey: "reblog") as? NSDictionary {
+//            if let comment = comment.value(forKey: "comment") as? String  {
+//                
+//                //use regex to strip HTML tags
+//                let com = comment.replacingOccurrences(of: "<[^>]+>", with: "", options: .regularExpression, range: nil)
+//                
+//                cell.commentLabel.text = com
+//                
+//            }
+//        }
         
         //retrieve image to put in the cell
         if let photos = post.value(forKeyPath: "photos") as? [NSDictionary] {
@@ -226,7 +226,12 @@ class PhotosViewController: UIViewController, UITableViewDelegate, UITableViewDa
         userLabel.font = UIFont(name: "Avenir-Heavy", size: 20)
         userLabel.text = userName
         
+        let dateLabel = UILabel(frame: CGRect(x: 100, y: 60, width: 250, height: 20))
+        dateLabel.font = UIFont(name: "Avenir-Book", size: 14)
+        dateLabel.text = post["date"] as? String
+        
         header.addSubview(userLabel)
+        header.addSubview(dateLabel)
         
         return header
     }

@@ -9,15 +9,20 @@
 import UIKit
 import AFNetworking
 
-class PhotoDetailsViewController: UIViewController {
+class PhotoDetailsViewController: UIViewController, UIScrollViewDelegate {
     @IBOutlet weak var photoView: UIImageView!
     var photoURL: String!
     var post: NSDictionary!
 
     @IBOutlet weak var userLabel: UILabel!
     @IBOutlet weak var profileImage: UIImageView!
+    @IBOutlet weak var commentLabel: UILabel!
+    @IBOutlet weak var dateLabel: UILabel!
+    @IBOutlet weak var scrollView: UIScrollView!
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        scrollView.delegate = self
 
         photoView.isUserInteractionEnabled = true
         
@@ -35,6 +40,27 @@ class PhotoDetailsViewController: UIViewController {
             profileImage.layer.borderColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1).cgColor
             profileImage.layer.borderWidth = 2
         }
+        
+        dateLabel.text = post["date"] as? String
+        
+        if let comment = post.value(forKey: "reblog") as? NSDictionary {
+            if let comment = comment.value(forKey: "comment") as? String  {
+                
+                //use regex to strip HTML tags
+                let com = comment.replacingOccurrences(of: "<[^>]+>", with: "", options: .regularExpression, range: nil)
+                
+                commentLabel.text = com
+                
+            }
+        }
+        
+        commentLabel.sizeToFit()
+        
+        let distance = commentLabel.frame.height  - self.view.frame.size.height - commentLabel.frame.origin.y + scrollView.frame.origin.y
+        scrollView.contentSize = CGSize(width: scrollView.frame.width, height: commentLabel.frame.origin.y + commentLabel.frame.height + 10)
+        print(commentLabel.frame.origin.y + scrollView.frame.origin.y)
+        print(commentLabel.frame.height)
+        print(distance)
     }
 
     override func didReceiveMemoryWarning() {
