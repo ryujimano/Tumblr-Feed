@@ -56,11 +56,7 @@ class PhotoDetailsViewController: UIViewController, UIScrollViewDelegate {
         
         commentLabel.sizeToFit()
         
-        let distance = commentLabel.frame.height  - self.view.frame.size.height - commentLabel.frame.origin.y + scrollView.frame.origin.y
         scrollView.contentSize = CGSize(width: scrollView.frame.width, height: commentLabel.frame.origin.y + commentLabel.frame.height + 10)
-        print(commentLabel.frame.origin.y + scrollView.frame.origin.y)
-        print(commentLabel.frame.height)
-        print(distance)
     }
 
     override func didReceiveMemoryWarning() {
