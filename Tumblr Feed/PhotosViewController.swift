@@ -92,7 +92,7 @@ class PhotosViewController: UIViewController, UITableViewDelegate, UITableViewDa
 
     }
     
-    func refresh(_ refreshControl: UIRefreshControl) {
+    @objc func refresh(_ refreshControl: UIRefreshControl) {
         
         //make a network request to Tumblr's API
         let url = URL(string:"https://api.tumblr.com/v2/blog/humansofnewyork.tumblr.com/posts/photo?api_key=Q6vHoaVm5L1u2ZAW1fqv3Jw48gFzYVg9P0vH0VHl3GVy6quoGV")
@@ -199,7 +199,7 @@ class PhotosViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let header = UIView(frame: CGRect(x: 0, y: 0, width: self.tableView.frame.width, height: 50))
-        header.backgroundColor = UIColor(colorLiteralRed: 1, green: 1, blue: 1, alpha: 0.75)
+        header.backgroundColor = UIColor.white.withAlphaComponent(0.75)
         
         let post = posts[section]
             //retrieve username and profile image to put in the cell
